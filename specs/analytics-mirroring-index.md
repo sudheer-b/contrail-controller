@@ -62,21 +62,28 @@ Update the mirror stats collected in flow table shared memory.
 #5. Performance and scaling impact
 =============
 
-None
+No impact
 
 
 #6. Upgrade 
 ======
 
+No impact
 
 #7. Deprecations
 =====
 
+No impact
+
 #8. Dependencies 
 ======
 
+No impact
+
 #9. Testing 
 ====
+
+To be added 
 
 ##9.1 Unit tests 
 
