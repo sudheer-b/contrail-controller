@@ -43,7 +43,9 @@ TBD
 
 ##4.2 Work items 
 --------
+
 __To add mirror index, mirrored packet and byte counts in flow stats:__
+
 At present number of bytes/packets using a flow is captured through /dev/flow device. Ageing task from FlowStatsCollector (flow_stats_collector.cc) is responsible for scan the flow table to collect the stats and send to collector using the format from flow.sandesh.
 Add mirror-index, mirrored packet and byte counts to ‘FlowLogData’ in flow.sandesh. From flow->data().match_p.action_info.mirror_l get AnalyzerName, using this get mirror-index from MirrorKSyncObject. Populate the index in FlowLogData. 
 Mirrored packet/byte counts to be read from shared memory similar to existing flow packets and byte counts.
@@ -57,22 +59,34 @@ Add new struct members for ‘mirror_bytes’ and ‘mirror_packets’ as part o
 Update the mirror stats collected in flow table shared memory.
 
 
-#5. Performance and scaling impact 
+#5. Performance and scaling impact
+=============
+
 None
-##5.1 API and control plane ####Scaling and performance for API and control plane
-##5.2 Forwarding performance ####Scaling and performance for API and forwarding
 
-#6. Upgrade ####Describe upgrade impact of the feature ####Schema migration/transition
 
-#7. Deprecations ####If this feature deprecates any older feature or API then list it here.
+#6. Upgrade 
+======
 
-#8. Dependencies ####Describe dependent features or components.
+
+#7. Deprecations
+=====
+
+#8. Dependencies 
+======
 
 #9. Testing 
+====
+
 ##9.1 Unit tests 
+
 ##9.2 Dev tests 
+
 ##9.3 System tests
 
+
 #10. Documentation Impact
+========
 
 #11. References
+======
