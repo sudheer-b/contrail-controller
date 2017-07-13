@@ -2,6 +2,7 @@
 This blueprint describes support for:
 
 Adding mirroring index flow in Contrail Analytics
+
 Capturing bytes/packets mirrored to a specific mirror index and have these
 stats available at Analytics node
 
@@ -30,16 +31,21 @@ mirror index and mirrored packet/byte counts.
 Currently flow stats are read from shared memory by vrouter agent, and exported
 using Sandesh message to Analytics node. This message has action=’pass|mirror’,
 the only indication that the packets of this flow are mirrored. Along with this
-we should add three new fields mirror index, Mirrored byte count, mirrored
-packet count. In an ideal case the packet/byte count data in flow entry should
-match the mirrored packet/byte count (new). Having two fields will help giving
-more confidence on the stability of mirroring functionality.
+we should add six new fields mirror_index, mirror_bytes, mirror_packets, 
+sec_mirror_index, sec_mirror_bytes, sec_mirror_packets (as current framework
+ supports provisioning to two mirrors). In an ideal case the packet/byte count 
+data in flow entry should match the mirrored packet/byte count (new). Having 
+two fields will help giving more confidence on the stability of mirroring 
+functionality.
 
 Mirror index will be fetched from matched ACL data for the flow. ACL data
 includes analyzer name, using the analyzer name we will get the mirror index.
 Mirrored packet/byte count should be collected at vrouter kernel module, when
 the packet is about to be mirrored. The capture stats can be added to same
 shared memory where flow stats are updated.
+
+Since the framework supports provisioning of two mirrors, stats from both the 
+mirrors (if configured) will be captured.
 
 
 ## 3.1 Alternatives considered
@@ -99,8 +105,15 @@ Support Users can use the mirror index to get the Mirror configuration and
 endpoint details. Having this information in flows at analytics DB for
 longer duration (than the flow timer expiry) helps in better support.
 
+This mirror index should be used to refer mirror_index (new field) in the 
+flow record to get bytes and packet counts mirrored to a specific analyzer.
+
 ## 3.4 UI changes
-None
+There are no changes done as part of this feature. However, configured mirror 
+indexes for an analyzer instance can be inspected using info from 
+contrail-vrouter-agent introspect call. 
+e.g. http://&lt;compute-ip&gt;:8085/agent.xml#Snh_MirrorEntryReq
+
 
 ## 3.5 Notification impact
 None
@@ -113,8 +126,8 @@ To add mirror index, mirrored packet and byte counts in flow stats:
 At present number of bytes/packets using a flow is captured through /dev/flow
 device. Ageing task from FlowStatsCollector (flow_stats_collector.cc) is
 responsible for scan the flow table to collect the stats and send to collector
-using the format from flow.sandesh. Add mirror-index, mirrored packet and byte
-counts to ‘FlowLogData’ in flow.sandesh. From
+using the format from flow.sandesh. Add mirror_index, mirror_bytes, mirror_packets, 
+sec_mirror_index, sec_mirror_bytes, sec_mirror_packets to ‘FlowLogData’ in flow.sandesh. From
 flow->data().match_p.action_info.mirror_l get AnalyzerName, using this get
 mirror-index from MirrorKSyncObject. Populate the index in FlowLogData. Mirrored
 packet/byte counts to be read from shared memory similar to existing flow
@@ -125,9 +138,10 @@ new fields to Analytics DB.
 
 Capturing mirrored packet and byte counts in vrouter kernel module:
 
-Add new struct members for ‘mirror_bytes’, ‘mirror_packets’, 'sec_mirror_bytes', 'sec_mirror_packets' as part of ‘vr_flow_stats’. Pass this reference of vr_flow_stats to vr_mirror method call.
-Add logic at vr_mirror to calculate bytes and packets and store in
-vr_flow_stats, as this is the place where a packet is sent to nh module for
+Add new struct members for ‘mirror_bytes’, ‘mirror_packets’, 'sec_mirror_bytes',
+'sec_mirror_packets' as part of ‘vr_flow_stats’. Pass this reference of vr_flow_stats 
+to vr_mirror method call. Add logic at vr_mirror to calculate bytes and packets and 
+store in vr_flow_stats, as this is the place where a packet is sent to nh module for
 mirroring. This information to be captured after all existing mirror validations
 are done, just before handing the packet over to next hop.
 
@@ -155,7 +169,9 @@ None
 ## 9.3 System tests
 
 # 10. Documentation Impact
-None
+Documentation to be updated to reflect new fields visible as part of flow record data.
 
 # 11. References
 None
+
+
