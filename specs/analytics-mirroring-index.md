@@ -94,9 +94,9 @@ is a sample message:
   <b>&lt;mirror_index type="byte" identifier="38"&gt;1&lt;/mirror_index&gt;
   &lt;mirror_bytes type="i64" identifier="39"&gt;98&lt;/mirror_bytes&gt;
   &lt;mirror_packets type="i64" identifier="40"&gt;1&lt;/mirror_packets&gt;
-  &lt;sec_mirror_index type="byte" identifier="38"&gt;1&lt;/sec_mirror_index&gt;
-  &lt;sec_mirror_bytes type="i64" identifier="39"&gt;98&lt;/sec_mirror_bytes&gt;
-  &lt;sec_mirror_packets type="i64" identifier="40"&gt;1&lt;/sec_mirror_packets&gt;</b>
+  &lt;sec_mirror_index type="byte" identifier="41"&gt;1&lt;/sec_mirror_index&gt;
+  &lt;sec_mirror_bytes type="i64" identifier="42"&gt;98&lt;/sec_mirror_bytes&gt;
+  &lt;sec_mirror_packets type="i64" identifier="43"&gt;1&lt;/sec_mirror_packets&gt;</b>
 &lt;/FlowLogData&gt;
 </code></pre>
 
